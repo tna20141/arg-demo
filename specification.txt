@@ -1,0 +1,179 @@
+ARGDEMO - demo programs about handling command line arguments
+=============================================================
+
+
+DESCRIPTION
+
+This project is a demonstration of how to process command line arguments in 
+various programming languages (notably C, Python or Bash scripting).
+
+NOTE: I originally intend to include Bash scripting in the project, but since
+Bash scripting itself serves as a quick-and-dirty tool, and this project is
+about carefully handling complex commmand line arguments, I decided to remove
+it from this project. When using Bash scripting, the arguments specification
+(positions, requirements etc.) should be simple and anticipatable.
+
+
+TERMS
+
+The terms below are the ones I think is appropriate for this project. They are 
+not in any way standards. The terms include:
+
+	prefixed arguments: arguments with a (or two, in long form) hyphen "-" 
+at the beginning. These are also called optional arguments. Those that are not
+prefixed arguments are called positional arguments
+
+	collection arguments: arguments that are a collection (or subset) of a 
+predefined (for example, tar xvzf)
+
+	short form: prefixed arguments with only 1 hyphen and 1 more 
+alphanumeric character
+
+	long form: short form arguments written in full (with 2 hyphens)
+
+	flag arguments: prefixed arguments that don't require any data 
+immediately after them (turn somthing on/off)
+
+	flag-like arguments: like flag argument, but can take additional data
+
+	subcommand: a type of argument that usually at the beginning of the 
+command line argument list, and can be treated as a command by itself
+
+	target arguments: arguments at the end of the argument list, not a 
+prefixed argument, usually a filename
+
+
+OVERVIEW
+
+Most prefixed arguments can be in any order. Some arguments require additional 
+input right after them. However, some arguments (non-prefixed ones) have to be 
+in an exact order.
+
+Some arguments may be a collection of several options (like tar xvzf or chmod 
+ug+wx). The collection can be quite messy.
+
+Most arguments have short form and long form.
+
+Some commands' main target is a file. The filename usually is the last command 
+line argument.
+
+Some arguments can be used in conjunction with each other (which means some 
+might have no effect if its related argument(s) is not specified). Likewise, 
+some arguments can't be specified together.
+
+An argument can be an option, or a subcommand. Most programs only have at most 
+1 level of subcommand. Subcommand usually is (and have to be) the first command 
+line argument.
+
+Most arguments have a default value. It could be a text value, a number or a 
+boolean value (for flag options). The value of an option could specify the 
+action that the command will do, not just data that will be operated on.
+
+Flag arguments in short form can be combined together (for example: ls -la).
+
+Some arguments are required (of course they are not flag arguments).
+
+
+FUNCTIONS
+
+The general functions of the demo program will include:
+
+	Take in the command line call and process the arguments
+
+	Notify if the call is invalid
+
+	Display a the program states after the arguments are processed (which 
+flags are on, which actions are taken, internal values, which ones are by 
+default, etc.)
+
+
+SPECIFICATION
+
+Here is the detailed specification of the arguments of the demo program:
+
+No argument: the same as specifying <prog_name> -h or <prog_name> --help
+
+Subcommands:
+
+	cmda: demonstrate collection-type arguments and a fixed order of some 
+arguments
+
+	cmdb: demonstrate arguments that are related to each other, and a 
+number of target arguments at the end
+
+	-h --help: this is not actually a subcommand. It is intended to be an 
+option for displaying help
+
+Subcommand cmda:
+
+	Non-prefixed arguments (must be in exact order as listed below):
+
+		abcd+efgh: a collection of options. The left side of the '+' 
+character is a subset of 'abcd' in any order. The same applies to the right 
+side. This generally works the same way as chmod's permission option.
+
+		<nparga>: a non-prefixed argument
+
+		<npargb>: a non-prefixed argument (a choice from a subset)
+
+	Prefixed arguments (can be in any position):
+
+		-c --carg: a flag argument without additional input. Default to true
+
+		-d --darg: a flag argument without additional input. Default to false
+
+		-q --qarg: a flag argument without additional input. This flag 
+can't be set together with the -c flag. Default to false
+
+		-e --earg <parge>: a prefixed argument with additional input. 
+Required
+
+		-f --farg <pargf>: a flag-like argument with additional input. 
+Not required
+
+		-g --garg <pargg>: a prefixed argument with additional input. 
+Have default value. Not required (note that this option is on whether it is 
+specified in the call or not)
+
+		-r --rarg [pargr]: a flag-like argument with additional input. 
+Have default value. Not required.
+	
+Subcommand cmdb:
+
+	Non-prefixed arguments:
+
+		<npargi> [npargi...]: 1 or more target arguments
+
+	Prefixed arguments (can be in any position but at the end):
+
+		-j --jarg: a flag argument without additional input. Default to false
+
+		-k --karg: a flag argument without additional input. Default to false
+
+		-l --larg: a flag argument without additional input. This 
+option is effective only if the -j option is specified (note that processing 
+this argument is still the same, it's just that the processing will be useful 
+or not). Default to false
+
+		Note: the below -n, -o and -p arguments' additional input will be 
+a choice from a set of values (not like in cmda, where the additional input 
+values can be (almost) anything)
+
+		-m --marg <pargm>: a prefixed argument with additional input. 
+Required
+
+		-n --narg <pargn>: a flag-like argument with additional input. 
+Not required
+
+		-o --oarg <pargo>: a prefixed argument with additional input. 
+Have default value. Not required (notice: this option is on whether it is 
+specified in the call or not)
+
+		-p --parg [pargp]: a flag-like argument with additional input. 
+Have default value. Not required
+
+		-s --sarg <pargs>: a flag-like argument with additional input. 
+Not required. This option can't be specified together with the -p option
+
+The program should include descriptions and help messages for subcommands and
+options as well.
